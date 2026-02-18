@@ -47,5 +47,5 @@ int main()
         galrez = 0.4 * studis.vid + 0.6 * studis.egrez;
         printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Vid.)");
     }
-    printf("%-10s%-10s%-10lf\n", studis.pav.c_str(), studis.vard.c_str(), galrez);
+    printf("%-10s%-10s%-10.2lf\n", studis.pav.c_str(), studis.vard.c_str(), galrez);
 }

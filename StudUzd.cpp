@@ -31,11 +31,21 @@ int main()
 {
     Stud studis;
     float galrez, mediana;
+    bool kuri;
     skaitom(studis);
-    mediana = (studis.kiek % 2 == 0) ? (studis.rez[studis.kiek / 2] + studis.rez[studis.kiek / 2 + 1]) / 2 : studis.rez[studis.kiek / 2];
-    //galrez = 0.4 * studis.vid + 0.6 * studis.egrez;
-    galrez = 0.4 * mediana + 0.6 * studis.egrez;
-    //printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Vid.)");
-    printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Med.)");
+    std::cout << "Naudoti vidurki ar mediana galutiniam rezultatui?" << std::endl;
+    std::cout << "0 - Vidurki\n1 - Mediana" << std::endl;
+    std::cin >> kuri;
+    if (kuri)
+    {
+        mediana = (studis.kiek % 2 == 0) ? (studis.rez[studis.kiek / 2] + studis.rez[studis.kiek / 2 - 1]) / 2 : studis.rez[studis.kiek / 2];
+        printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Med.)");
+        galrez = 0.4 * mediana + 0.6 * studis.egrez;
+    }
+    else
+    {
+        galrez = 0.4 * studis.vid + 0.6 * studis.egrez;
+        printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Vid.)");
+    }
     printf("%-10s%-10s%-10lf\n", studis.pav.c_str(), studis.vard.c_str(), galrez);
 }

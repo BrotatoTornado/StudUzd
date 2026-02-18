@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 struct Stud
 {
@@ -29,9 +30,12 @@ void skaitom(Stud &studis)
 int main()
 {
     Stud studis;
-    float galrez;
+    float galrez, mediana;
     skaitom(studis);
-    galrez = 0.4 * studis.vid + 0.6 * studis.egrez;
-    printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Vid.)");
+    mediana = (studis.kiek % 2 == 0) ? (studis.rez[studis.kiek / 2] + studis.rez[studis.kiek / 2 + 1]) / 2 : studis.rez[studis.kiek / 2];
+    //galrez = 0.4 * studis.vid + 0.6 * studis.egrez;
+    galrez = 0.4 * mediana + 0.6 * studis.egrez;
+    //printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Vid.)");
+    printf("%-10s%-10s%-10s\n", "Pavarde", "Vardas", "Galutinis (Med.)");
     printf("%-10s%-10s%-10lf\n", studis.pav.c_str(), studis.vard.c_str(), galrez);
 }

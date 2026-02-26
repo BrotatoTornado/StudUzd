@@ -1,20 +1,13 @@
 #include <algorithm>
 #include <chrono>
-#include <clocale>
-#include <cwchar>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <limits>
 #include <random>
 #include <sstream>
-#include <stdexcept>
 #include <string>
 #include <vector>
-#include <wchar.h>
 #include <cstdlib>
-#include <windows.h>
-#include <chrono>
 
 struct Stud
 {
@@ -239,20 +232,35 @@ int main()
         switch (p)
         {
         case 1:
-            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.vard < b.vard; });
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b)
+                {
+                    return a.vard < b.vard;
+                });
             break;
         case 2:
-            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.pav < b.pav; });
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b)
+                {
+                    return a.pav < b.pav;
+                });
             break;
         case 3:
-            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.galrezVid < b.galrezVid; });
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b)
+                {
+                    return a.galrezVid < b.galrezVid;
+                });
             break;
         case 4:
-            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.galrezMed < b.galrezMed; });
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b)
+                {
+                    return a.galrezMed < b.galrezMed;
+                });
             break;
         }
         break;
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
 
     std::cout << "Rezultatą išvesti į:\n0 - Konsolę\n1 - Failą" << std::endl;
     bool ifaila;
@@ -272,11 +280,11 @@ int main()
             return 1;
         }
 
-        write << std::left << std::setw(20) << "Vardas" << std::setw(20) << "Pavarde" << std::setw(15) << "Galutinis(Vid.)" << std::setw(15) << "Galutinis(Med.)" << std::endl;
+        write << std::left << std::setw(20) << "Vardas" << std::setw(20) << "Pavarde" << std::setw(25) << "Galutinis(Vid.)" << std::setw(25) << "Galutinis(Med.)" << std::endl;
 
         for (auto& i : studis)
         {
-            write << std::left << std::setw(20) << i.vard << std::setw(20) << i.pav << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezVid << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezMed << std::endl;
+            write << std::left << std::setw(20) << i.vard << std::setw(20) << i.pav << std::setw(25) << std::fixed << std::setprecision(2) << i.galrezVid << std::setw(25) << std::fixed << std::setprecision(2) << i.galrezMed << std::endl;
         }
     }
     else
@@ -288,8 +296,6 @@ int main()
             printf("%-20s%-20s%-20.2f%-15.2f\n", i.vard.c_str(), i.pav.c_str(), i.galrezVid, i.galrezMed);
         }
     }
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
 
     std::cout << "Programa veikė: " << elapsed.count() << " sekundžių\n";
 }

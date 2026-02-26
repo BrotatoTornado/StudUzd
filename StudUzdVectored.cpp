@@ -14,6 +14,7 @@
 #include <wchar.h>
 #include <cstdlib>
 #include <windows.h>
+#include <chrono>
 
 struct Stud
 {
@@ -171,6 +172,7 @@ int main()
     bool c;
     std::cin >> c;
 
+    auto start = std::chrono::high_resolution_clock::now();
     if (c)
     {
         failoSkaitymas(studis);
@@ -279,11 +281,15 @@ int main()
     }
     else
     {
-        printf("%-20s%-20s%-20.2f%-15.2f\n", "Vardas", "Pavarde", "Galutinis(Vid.)", "Galutinis(Med.)");
+        printf("%-20s%-20s%-20.2s%-15.2s\n", "Vardas", "Pavarde", "Galutinis(Vid.)", "Galutinis(Med.)");
         printf("-------------------------------------------------------\n");
         for (auto& i : studis)
         {
             printf("%-20s%-20s%-20.2f%-15.2f\n", i.vard.c_str(), i.pav.c_str(), i.galrezVid, i.galrezMed);
         }
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+
+    std::cout << "Programa veikė: " << elapsed.count() << " sekundžių\n";
 }

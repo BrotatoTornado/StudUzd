@@ -23,33 +23,6 @@ struct Stud
     float vid = 0.0f, galrezMed = 0.0, galrezVid = 0.0;
 };
 
-//void initLtLocale()
-//{
-//    std::setlocale(LC_ALL, "");
-//
-//    try
-//    {
-//        std::locale loc("lt_LT.UTF-8");
-//        std::locale::global(loc);
-//        std::cin.imbue(loc);
-//        std::cout.imbue(loc);
-//    }
-//    catch (...)
-//    {
-//        try
-//        {
-//            std::locale loc("C.UTF-8");
-//            std::locale::global(loc);
-//            std::cin.imbue(loc);
-//            std::cout.imbue(loc);
-//        }
-//        catch (...)
-//        {
-//            std::cerr << "Nepavyko įjungti UTF-8 locale\n";
-//        }
-//    }
-//}
-
 void dinamuojamPazymius(Stud& studis)
 {
     std::cout << "Iveskite namu darbu pazymius. Irasykite 0 kai baigete." << std::endl;
@@ -149,19 +122,21 @@ void failoSkaitymas(std::vector<Stud>& studis)
 
 void parinktiAtsitiktinius(Stud& studis)
 {
-    int kiekND = 1 + rand() % 10;
+    std::mt19937 gen(std::random_device{}());
+    std::uniform_int_distribution<> dist(1, 10);
+    int kiekND = dist(gen);
     studis.rez.clear();
     studis.vid = 0.0f;
 
     for (int i = 0; i < kiekND; i++)
     {
-        int balas = 1 + rand() % 10;
+        int balas = dist(gen);
         studis.rez.push_back(balas);
         studis.vid += balas;
     }
 
     studis.vid /= studis.rez.size();
-    studis.egrez = 1 + rand() % 10;
+    studis.egrez = dist(gen);
 }
 
 void skaitomRanka(Stud& studis)
@@ -189,13 +164,6 @@ void skaitomRanka(Stud& studis)
 
 int main()
 {
-    //initLtLocale();
-    SetConsoleOutputCP(65001);
-    SetConsoleCP(65001);
-
-    //setlocale(LC_ALL, "lt_LT.UTF-8");
-
-
     std::vector<Stud> studis;
     Stud s;
 
@@ -311,7 +279,7 @@ int main()
     }
     else
     {
-        printf("%-10s%-10s%-15s%-15s\n", "Vardas", "Pavarde", "Galutinis(Vid.)", "Galutinis(Med.)");
+        printf("%-20s%-20s%-20.2f%-15.2f\n", "Vardas", "Pavarde", "Galutinis(Vid.)", "Galutinis(Med.)");
         printf("-------------------------------------------------------\n");
         for (auto& i : studis)
         {

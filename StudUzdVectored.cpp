@@ -1,16 +1,54 @@
-﻿#include <iostream>
-#include <string>
 #include <algorithm>
+#include <chrono>
+#include <clocale>
+#include <cwchar>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <random>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 #include <vector>
+#include <wchar.h>
 #include <cstdlib>
+#include <windows.h>
 
 struct Stud
 {
     std::string vard, pav;
     int egrez;
     std::vector<int> rez;
-    float vid = 0.0f;
+    float vid = 0.0f, galrezMed = 0.0, galrezVid = 0.0;
 };
+
+//void initLtLocale()
+//{
+//    std::setlocale(LC_ALL, "");
+//
+//    try
+//    {
+//        std::locale loc("lt_LT.UTF-8");
+//        std::locale::global(loc);
+//        std::cin.imbue(loc);
+//        std::cout.imbue(loc);
+//    }
+//    catch (...)
+//    {
+//        try
+//        {
+//            std::locale loc("C.UTF-8");
+//            std::locale::global(loc);
+//            std::cin.imbue(loc);
+//            std::cout.imbue(loc);
+//        }
+//        catch (...)
+//        {
+//            std::cerr << "Nepavyko įjungti UTF-8 locale\n";
+//        }
+//    }
+//}
 
 void dinamuojamPazymius(Stud& studis)
 {
@@ -52,6 +90,63 @@ void dinamuojamPazymius(Stud& studis)
     }
 }
 
+void failoSkaitymas(std::vector<Stud>& studis)
+{
+    std::cout << "Įveskite failo pavadinimą:" << std::endl;
+    std::string pav;
+    std::cin >> pav;
+
+    std::ifstream read(pav);
+
+    if (!read.is_open())
+    {
+        std::cerr << "Neatidarem failo. Patikrinkite pavadinimą.";
+        std::exit(1);
+    }
+
+    std::string line;
+
+    while (getline(read, line))
+    {
+        if (line.empty())
+        {
+            continue;
+        }
+
+        std::istringstream ss(line);
+        Stud s;
+
+        ss >> s.vard >> s.pav;
+
+        int x;
+
+        while (ss >> x)
+        {
+            s.rez.push_back(x);
+        }
+
+        if (s.rez.empty())
+        {
+            continue;
+        }
+
+        s.egrez = s.rez.back();
+        s.rez.pop_back();
+
+        for (auto i : s.rez)
+        {
+            s.vid += i;
+        }
+
+        if (!s.rez.empty())
+        {
+            s.vid /= static_cast<float>(s.rez.size());
+        }
+
+        studis.push_back(s);
+    }
+}
+
 void parinktiAtsitiktinius(Stud& studis)
 {
     int kiekND = 1 + rand() % 10;
@@ -69,7 +164,7 @@ void parinktiAtsitiktinius(Stud& studis)
     studis.egrez = 1 + rand() % 10;
 }
 
-void skaitom(Stud &studis)
+void skaitomRanka(Stud& studis)
 {
     std::cout << "Iveskite varda" << std::endl;
     std::cin >> studis.vard;
@@ -77,7 +172,7 @@ void skaitom(Stud &studis)
     std::cin >> studis.pav;
 
     char c;
-    std::cout << "Ar naudoti atsitiktinai parinktus n.d. rezultatus?" << std::endl;
+    std::cout << "Ar naudoti atsitiktinai parinktus n.d. rezultatus? (y/n)" << std::endl;
     std::cin >> c;
 
     if (c != 'n' && c != 'N')
@@ -94,65 +189,133 @@ void skaitom(Stud &studis)
 
 int main()
 {
+    //initLtLocale();
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+
+    //setlocale(LC_ALL, "lt_LT.UTF-8");
+
+
     std::vector<Stud> studis;
+    Stud s;
 
-    while (true)
+    std::cout << "Pasirinkite, ar norite:\nĮrašyti ranka - 0\nSkaityti iš failo - 1" << std::endl;
+    bool c;
+    std::cin >> c;
+
+    if (c)
     {
-        Stud s;
-        skaitom(s);
-        studis.push_back(s);
-
-        char c;
-        std::cout << "Ar ivesti dar viena studenta? (y/n): ";
-        std::cin >> c;
-
-        if (c != 'y' && c != 'Y')
+        failoSkaitymas(studis);
+    }
+    else
+    {
+        while (true)
         {
-            break;
+            skaitomRanka(s);
+            studis.push_back(s);
+
+            char c;
+            std::cout << "Ar ivesti dar viena studenta? (y/n): ";
+            std::cin >> c;
+
+            if (c != 'y' && c != 'Y')
+            {
+                break;
+            }
         }
     }
 
-    bool kuri;
-    std::cout << "Naudoti vidurki ar mediana galutiniam rezultatui?" << std::endl;
-    std::cout << "0 - Vidurki\n1 - Mediana" << std::endl;
-    std::cin >> kuri;
-
-    if (kuri)
+    for (auto& i : studis)
     {
-        printf("%-10s%-10s%-15s\n", "Pavarde", "Vardas", "Galutinis (Med.)");
+        std::sort(i.rez.begin(), i.rez.end());
 
-        for (auto i: studis)
+        float med = 0.0f;
+        int n = i.rez.size();
+
+        if (n == 0)
         {
-            double med = 0.0;
-            int n = i.rez.size();
+            i.galrezMed = 0;
+            i.galrezVid = 0;
+            continue;
+        }
 
-            if (n > 0)
-            {
-                std::vector<int> temp = i.rez;
-                std::sort(temp.begin(), temp.end());
+        if (n % 2 == 1)
+        {
+            med = i.rez[n / 2];
+        }
+        else
+        {
+            med = (i.rez[n / 2] + i.rez[n / 2 - 1]) / 2.0f;
+        }
 
-                if (n % 2 == 1)
-                {
-                    med = temp[n / 2];
-                }
-                else
-                {
-                    med = (temp[n / 2] + temp[n / 2 - 1]) / 2.0;
-                }
-            }
+        i.galrezMed = 0.4f * med + 0.6f * i.egrez;
+        i.galrezVid = 0.4f * i.vid + 0.6f * i.egrez;
+    }
 
-            double galrez = 0.4 * med + 0.6 * i.egrez;
-            printf("%-10s%-10s%-10.2lf\n", i.pav.c_str(), i.vard.c_str(), galrez);
+    std::cout << "Pagal ką surūšiuoti?\n1 - Vardą\n2 - Pavardę\n3 - Galutinis (Vid.)\n4 - Galutinis (Med.)" << std::endl;
+    int p;
+    while (true)
+    {
+        std::cin >> p;
+
+        if (!std::cin || p < 1 || p > 4)
+        {
+            std::cout << "Įveskite skaičių nuo 1 iki 4" << std::endl;
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            continue;
+        }
+
+        switch (p)
+        {
+        case 1:
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.vard < b.vard; });
+            break;
+        case 2:
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.pav < b.pav; });
+            break;
+        case 3:
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.galrezVid < b.galrezVid; });
+            break;
+        case 4:
+            std::sort(studis.begin(), studis.end(), [](const Stud& a, const Stud& b) { return a.galrezMed < b.galrezMed; });
+            break;
+        }
+        break;
+    }
+
+    std::cout << "Rezultatą išvesti į:\n0 - Konsolę\n1 - Failą" << std::endl;
+    bool ifaila;
+    std::cin >> ifaila;
+
+    if (ifaila)
+    {
+        std::cout << "Įveskite failo pavadinimą:" << std::endl;
+        std::string failopav;
+        std::cin >> failopav;
+
+        std::ofstream write(failopav);
+
+        if (!write.is_open())
+        {
+            std::cerr << "Nepavyko sukurti failo!" << std::endl;
+            return 1;
+        }
+
+        write << std::left << std::setw(20) << "Vardas" << std::setw(20) << "Pavarde" << std::setw(15) << "Galutinis(Vid.)" << std::setw(15) << "Galutinis(Med.)" << std::endl;
+
+        for (auto& i : studis)
+        {
+            write << std::left << std::setw(20) << i.vard << std::setw(20) << i.pav << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezVid << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezMed << std::endl;
         }
     }
     else
     {
-        printf("%-10s%-10s%-15s\n", "Pavarde", "Vardas", "Galutinis (Vid.)");
-
-        for (auto i: studis)
+        printf("%-10s%-10s%-15s%-15s\n", "Vardas", "Pavarde", "Galutinis(Vid.)", "Galutinis(Med.)");
+        printf("-------------------------------------------------------\n");
+        for (auto& i : studis)
         {
-            double galrez = 0.4 * i.vid + 0.6 * i.egrez;
-            printf("%-10s%-10s%-10.2lf\n", i.pav.c_str(), i.vard.c_str(), galrez);
+            printf("%-20s%-20s%-20.2f%-15.2f\n", i.vard.c_str(), i.pav.c_str(), i.galrezVid, i.galrezMed);
         }
     }
 }

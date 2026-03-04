@@ -1,3 +1,2 @@
-V0.2: Gali pasirinkti ar nori pats suvesti ar skaityti iš failo, tvarkingesnis nei v0.1. Gali sekti programos veikimo laiką, įvesti kiek nori namų darbų rezultatų.
-
-Rekomenduojama build'inti su -O3 arba -O2 (su didž. failu gali gauti sutvarkytą sąrašą per ~8 sek.).
+V0.3 pakeitimai:
+Projekto refaktorizavimas. Viskas perkelta i atskirus .cpp failus su savo .h failais. Pridetas makefile, kad būtų paprasčiau kompiliuoti. Pridėta optimizacijų, kur tinkama.

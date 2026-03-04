@@ -23,7 +23,9 @@ void rikiuotiStudentus(std::vector<Stud>& studis)
     std::cin >> p;
 
     if (!std::cin || p < 1 || p > 4)
+    {
         throw std::runtime_error("Neteisingas pasirinkimas rusiavimo meniu.");
+    }
 
     switch (p)
     {
@@ -77,9 +79,13 @@ int main()
             }
 
             if (n % 2 == 1)
+            {
                 med = i.rez[n / 2];
+            }
             else
+            {
                 med = (i.rez[n / 2] + i.rez[n / 2 - 1]) / 2.0f;
+            }
 
             i.galrezMed = 0.4f * med + 0.6f * i.egrez;
             i.galrezVid = 0.4f * i.vid + 0.6f * i.egrez;
@@ -87,10 +93,7 @@ int main()
 
         rikiuotiStudentus(studis);
 
-        std::cout << std::left << std::setw(20) << "Vardas"
-            << std::setw(20) << "Pavarde"
-            << std::setw(20) << "Galutinis(Vid.)"
-            << std::setw(15) << "Galutinis(Med.)" << '\n';
+        std::cout << std::left << std::setw(20) << "Vardas" << std::setw(20) << "Pavarde" << std::setw(20) << "Galutinis(Vid.)" << std::setw(15) << "Galutinis(Med.)" << '\n';
         std::cout << "-------------------------------------------------------\n";
         for (auto& i : studis)
         {

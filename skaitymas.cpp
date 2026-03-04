@@ -115,7 +115,11 @@ void parinktiAtsitiktinius(Stud& studis)
 {
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> dist(1, 10);
+
+
     int kiekND = dist(gen);
+
+
     studis.rez.clear();
     studis.vid = 0.0f;
 

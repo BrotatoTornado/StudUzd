@@ -55,53 +55,63 @@ void failoSkaitymas(std::vector<Stud>& studis)
     std::string pav;
     std::cin >> pav;
 
-    std::ifstream read(pav);
-
-    if (!read.is_open())
+    while(true)
     {
-        throw std::runtime_error("Neatidarem failo. Patikrinkite pavadinimą.");
-    }
-
-    std::string line;
-
-    while (getline(read, line))
-    {
-        if (line.empty())
+        try
         {
+            std::ifstream read(pav);
+
+            if (!read.is_open())
+            {
+                throw std::runtime_error("Neatidarem failo. Patikrinkite pavadinimą.");
+            }
+
+            std::string line;
+
+            while (getline(read, line))
+            {
+                if (line.empty())
+                {
+                    continue;
+                }
+
+                std::istringstream ss(line);
+                Stud s;
+
+                ss >> s.vard >> s.pav;
+
+                int x;
+                while (ss >> x)
+                {
+                    s.rez.push_back(x);
+                }
+
+                if (s.rez.empty())
+                {
+                    continue;
+                }
+
+                s.egrez = s.rez.back();
+                s.rez.pop_back();
+
+                for (auto i : s.rez)
+                {
+                    s.vid += i;
+                }
+
+                if (!s.rez.empty())
+                {
+                    s.vid /= static_cast<float>(s.rez.size());
+                }
+
+                studis.push_back(s);
+            }
+        }
+        catch (const std::runtime_error& e)
+        {
+            std::cerr << "Klaida skaitant faila: " << e.what() << ". Įrašykite teisingą pavadinimą." << std::endl;
             continue;
         }
-
-        std::istringstream ss(line);
-        Stud s;
-
-        ss >> s.vard >> s.pav;
-
-        int x;
-
-        while (ss >> x)
-        {
-            s.rez.push_back(x);
-        }
-
-        if (s.rez.empty())
-        {
-            continue;
-        }
-
-        s.egrez = s.rez.back();
-        s.rez.pop_back();
-
-        for (auto i : s.rez)
-        {
-            s.vid += i;
-        }
-
-        if (!s.rez.empty())
-        {
-            s.vid /= static_cast<float>(s.rez.size());
-        }
-
-        studis.push_back(s);
     }
 }
 

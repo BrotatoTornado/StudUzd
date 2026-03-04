@@ -19,8 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="StudUzdMassive.cpp" />
-    <ClCompile Include="StudUzdVectored.cpp" />
+    <ClInclude Include="meniu.h" />
+    <ClInclude Include="skaitymas.h" />
+    <ClInclude Include="studentas.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="meniu.cpp" />
+    <ClCompile Include="skaitymas.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

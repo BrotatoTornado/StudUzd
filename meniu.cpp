@@ -7,7 +7,7 @@
 #include <vector>
 #include <algorithm>
 
-void vykdytiMeniu(std::vector<Stud>& studis)
+bool vykdytiMeniu(std::vector<Stud>& studis)
 {
     Stud s;
 
@@ -29,11 +29,6 @@ void vykdytiMeniu(std::vector<Stud>& studis)
             throw std::runtime_error("Bloga ivestis.");
         }
 
-        if (pasirinkimas == 6)
-        {
-            break;
-        }
-
         switch (pasirinkimas)
         {
             case 1:
@@ -42,7 +37,7 @@ void vykdytiMeniu(std::vector<Stud>& studis)
                 break;
             case 2:
                 failoSkaitymas(studis);
-                studis.push_back(s);
+                //studis.push_back(s);
                 break;
             case 3:
                 std::cout << "Iveskite varda: ";
@@ -77,11 +72,14 @@ void vykdytiMeniu(std::vector<Stud>& studis)
                 }
                 else
                 {
-                    break;
+                    return false;
                 }
+            case 6:
+                return false;
             default:
                 std::cout << "Neteisingas pasirinkimas.\n";
                 continue;
         }
     }
+    return true;
 }

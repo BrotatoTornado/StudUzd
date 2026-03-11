@@ -4,8 +4,4 @@
 
 void generuotiFaila();
 
-void skirstymasGrupes(std::vector<Stud>& studis);#pragma once
-#include <string>
-
-
-void generuotiFaila();
+void skirstymasGrupes(std::vector<Stud>& studis);

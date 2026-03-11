@@ -111,15 +111,41 @@ void failoSkaitymas(std::vector<Stud>& studis)
     }
 }
 
+void suskaiciuotiGalutinius(std::vector<Stud>& studis)
+{
+    for (auto& i : studis)
+    {
+        std::sort(i.rez.begin(), i.rez.end());
+
+        float med = 0.0f;
+        int n = static_cast<int>(i.rez.size());
+
+        if (n == 0)
+        {
+            i.galrezMed = 0;
+            i.galrezVid = 0;
+            continue;
+        }
+
+        if (n % 2 == 1)
+        {
+            med = i.rez[n / 2];
+        }
+        else
+        {
+            med = (i.rez[n / 2] + i.rez[n / 2 - 1]) / 2.0f;
+        }
+
+        i.galrezMed = 0.4f * med + 0.6f * i.egrez;
+        i.galrezVid = 0.4f * i.vid + 0.6f * i.egrez;
+    }
+}
+
 void parinktiAtsitiktinius(Stud& studis)
 {
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> dist(1, 10);
-
-
     int kiekND = dist(gen);
-
-
     studis.rez.clear();
     studis.vid = 0.0f;
 

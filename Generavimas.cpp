@@ -50,7 +50,7 @@ void generuotiFaila()
 		for (int i = 0; i <= kiekis; i++)
 		{
 			write << std::left << std::setw(15) << ("Vardas" + std::to_string(i)) << std::right << std::setw(15) << ("Pavarde" + std::to_string(i));
-			for (int j = 0; j < ndkiek; j++)
+			for (int j = 0; j <= ndkiek; j++)
 			{
 				write << std::right << std::setw(15) << dist(gen); //nd pazymiai
 			}

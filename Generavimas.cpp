@@ -1,4 +1,141 @@
 #include "Generavimas.h"
+#include "spausdinam.h"
+#include "skaitymas.h"
+
+#include <vector>
+#include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <random>
+#include <string>
+#include <algorithm>
+#include <chrono>
+
+bool galimasPavadinimas(std::string pav)
+{
+    std::ifstream f(pav);
+    return f.is_open();
+}
+
+std::string failoPavadinimas(const std::string& bazinisPavadinimas)
+{
+    std::string pavadinimas = bazinisPavadinimas + ".txt";
+    int count = 1;
+
+    while (galimasPavadinimas(pavadinimas))
+    {
+        count++;
+        pavadinimas = bazinisPavadinimas + std::to_string(count) + ".txt";
+    }
+
+    return pavadinimas;
+}
+
+void skirstymasGrupes(std::vector<Stud>& studis)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // dabar daliname į vargsus ir protus ir išvedame į failus
+    std::vector<Stud> vargsai;
+    std::vector<Stud> protai;
+    vargsai.reserve(studis.size());
+    protai.reserve(studis.size());
+
+    for (auto& s : studis)
+    {
+        if (s.galrezVid < 5.0f)
+        {
+            vargsai.push_back(s);
+        }
+        else
+        {
+            protai.push_back(s);
+        }
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    std::cout << "Suskirstymo i grupes trukme: " << duration.count() << " sekundziu" << std::endl;
+    
+    rikiuotiStudentus(vargsai, "vargsus");
+    rikiuotiStudentus(protai, "protobokstus");
+
+    auto startPrint = std::chrono::high_resolution_clock::now();
+    spausdinam(vargsai, failoPavadinimas("Vargsai"));
+    spausdinam(protai, failoPavadinimas("Protobokstai"));
+    auto endPrint = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> durationPrint = endPrint - startPrint;
+
+    std::cout << "Isvedimo i failus trukme: " << durationPrint.count() << " sekundziu" << std::endl;
+}
+
+void generuotiFaila()
+{
+    std::cout << "Įrašykite failo pavadinimą: ";
+    std::string pav;
+    std::cin >> pav;
+
+    std::ofstream write(pav);
+    if (!write.is_open())
+    {
+        std::cerr << "Nepavyko sukurti failo." << std::endl;
+        return;
+    }
+
+    std::mt19937 gen(std::random_device{}());
+    std::uniform_int_distribution<int> dist(1, 10);
+
+    std::cout << "Įveskite studentų kiekį: ";
+    int kiekis;
+    std::cin >> kiekis;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    int ndkiek = dist(gen); // kiek ND generuoti
+
+    // spausdiname antraštę
+    write << std::left << std::setw(15) << "Vardas"
+        << std::setw(15) << "Pavarde";
+    for (int j = 0; j < ndkiek; j++)
+    {
+        write << std::setw(8) << ("ND" + std::to_string(j + 1));
+    }
+    write << std::setw(8) << "Egz." << std::endl;
+
+    for (int i = 0; i < kiekis; i++)
+    {
+        Stud s;
+        s.vard = "Vardas" + std::to_string(i + 1);
+        s.pav = "Pavarde" + std::to_string(i + 1);
+
+        write << std::left << std::setw(15) << s.vard
+            << std::setw(15) << s.pav;
+
+        s.rez.clear();
+        s.vid = 0.0f;
+
+        for (int j = 0; j < ndkiek; j++)
+        {
+            int nd = dist(gen);
+            s.rez.push_back(nd);
+            s.vid += nd;
+            write << std::setw(8) << nd;
+        }
+
+        if (!s.rez.empty())
+        {
+            s.vid /= s.rez.size();
+        }
+
+        s.egrez = dist(gen);
+        write << std::setw(8) << s.egrez << std::endl;
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    std::cout << "Failo generavimo trukme: " << duration.count() << " sekundes" << std::endl;
+}#include "Generavimas.h"
 #include "studentas.h"
 #include "spausdinam.h"
 #include "skaitymas.h"
@@ -130,3 +267,4 @@ void generuotiFaila()
 
     std::cout << "Trukme: " << duration.count() << " sekundziu" << std::endl;
 }
+

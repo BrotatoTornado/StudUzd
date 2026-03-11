@@ -9,6 +9,7 @@
 #include <random>
 #include <string>
 #include <algorithm>
+#include <chrono>
 
 bool galimasPavadinimas(std::string pav)
 {
@@ -49,6 +50,8 @@ void generuotiFaila()
     std::cout << "Įveskite studentų kiekį: ";
     int kiekis;
     std::cin >> kiekis;
+
+    auto start = std::chrono::high_resolution_clock::now();
 
     int ndkiek = dist(gen); // kiek ND generuoti
 
@@ -115,10 +118,15 @@ void generuotiFaila()
     }
 
     rikiuotiStudentus(vargsai, "vargsus");
-    spausdinam(vargsai, failoPavadinimas("Vargsai1"));
+    spausdinam(vargsai, failoPavadinimas("Vargsai"));
 
     rikiuotiStudentus(protai, "protobokstus");
-    spausdinam(protai, failoPavadinimas("Protobokstai1"));
+    spausdinam(protai, failoPavadinimas("Protobokstai"));
 
     std::cout << "Failai sugeneruoti" << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    std::cout << "Trukme: " << duration.count() << " sekundziu" << std::endl;
 }

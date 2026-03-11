@@ -5,6 +5,6 @@
 #include "studentas.h"
 #include <vector>
 
-void vykdytiMeniu(std::vector<Stud>& studis);
+bool vykdytiMeniu(std::vector<Stud>& studis);
 
 #endif

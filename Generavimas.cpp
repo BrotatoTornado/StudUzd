@@ -1,8 +1,7 @@
-﻿#include "Generavimas.h"
+#include "Generavimas.h"
 
 #include <iostream>
 #include <iomanip>
-#include <vector>
 #include <fstream>
 #include <random>
 
@@ -35,17 +34,28 @@ void generuotiFaila()
 				std::cerr << "Neteisinga įvestis. Bandykite iš naujo." << std::endl;
 				continue;
 			}
+			break;
 		}
+
+		int ndkiek = dist(gen);
+		write << std::left << std::setw(15) << "Vardas" << std::right << std::setw(15) << "Pavarde";
+
+		for (int i = 0; i <= ndkiek; i++)
+		{
+			write << std::right << std::setw(15) << ("ND" + std::to_string(i));
+		}
+
+		write << std::right << std::setw(15) << "Egz." << std::endl;
 
 		for (int i = 0; i <= kiekis; i++)
 		{
-			write << "Vardas" << i << std::setw(10) << "Pavarde" << i;
-			int ndkiek = dist(gen);
+			write << std::left << std::setw(15) << ("Vardas" + std::to_string(i)) << std::right << std::setw(15) << ("Pavarde" + std::to_string(i));
 			for (int j = 0; j < ndkiek; j++)
 			{
-				write << std::setw(10) << dist(gen); //nd pazymiai
+				write << std::right << std::setw(15) << dist(gen); //nd pazymiai
 			}
-			write << std::setw(10) << dist(gen) << std::endl; //egzo rezultatai
+			write << std::right << std::setw(15) << dist(gen) << std::endl; //egzo rezultatai
 		}
+		break;
 	}
 }

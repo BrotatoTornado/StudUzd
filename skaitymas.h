@@ -11,5 +11,6 @@ void dinamuojamPazymius(Stud& studis);
 void failoSkaitymas(std::vector<Stud>& studis);
 void parinktiAtsitiktinius(Stud& studis);
 void skaitomRanka(Stud& studis);
+void suskaiciuotiGalutinius(std::vector<Stud>& studis);
 
 #endif

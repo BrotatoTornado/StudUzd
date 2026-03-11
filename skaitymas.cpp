@@ -1,4 +1,6 @@
 #include "skaitymas.h"
+#include "Generavimas.h"
+
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -14,6 +16,9 @@
 void dinamuojamPazymius(Stud& studis)
 {
     std::cout << "Iveskite namu darbu pazymius. Irasykite 0 kai baigete." << std::endl;
+
+    studis.rez.clear();
+    studis.vid = 0;
 
     while (true)
     {
@@ -55,6 +60,8 @@ void failoSkaitymas(std::vector<Stud>& studis)
     std::string pav;
     std::cin >> pav;
 
+    auto start = std::chrono::high_resolution_clock::now();
+
     try
     {
         std::ifstream read(pav);
@@ -65,6 +72,7 @@ void failoSkaitymas(std::vector<Stud>& studis)
         }
 
         std::string line;
+        getline(read, line); //kad neunuskaityti pradines antrasciu eilutes
 
         while (getline(read, line))
         {
@@ -104,7 +112,17 @@ void failoSkaitymas(std::vector<Stud>& studis)
 
             studis.push_back(s);
         }
+
+
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+
+        std::cout << "Duomenu nuskaitymo trukme: " << duration.count() << " sekundziu" << std::endl;
+
+        suskaiciuotiGalutinius(studis);
+        skirstymasGrupes(studis);
     }
+
     catch (const std::runtime_error& e)
     {
         std::cerr << "Klaida skaitant faila: " << e.what() << std::endl;

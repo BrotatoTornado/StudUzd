@@ -27,6 +27,12 @@
     <ClInclude Include="Generavimas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="spausdinam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="laikai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,6 +45,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Generavimas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spausdinam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="laikai.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

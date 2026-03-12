@@ -67,6 +67,8 @@ Buvo matuojami šie etapai:
 3. rezultatų išvedimas į failus
 4. bendras programos veikimo laikas
 
+![Spartos laikai](screenshots/v0.4 rezultatai1.png)
+
 ## Rezultatai (vidurkiai)
 
 | Studentų skaičius | Skaitymas (s) | Skirstymas (s) | Rašymas (s) | Bendras laikas (s) |

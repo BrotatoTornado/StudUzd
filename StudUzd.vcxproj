@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Generavimas.h" />
     <ClInclude Include="meniu.h" />
     <ClInclude Include="skaitymas.h" />
     <ClInclude Include="studentas.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Generavimas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="meniu.cpp" />
     <ClCompile Include="skaitymas.cpp" />

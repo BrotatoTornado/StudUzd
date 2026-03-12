@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O3
 
 TARGET = programa
-SRC = main.cpp skaitymas.cpp meniu.cpp Generavimas.cpp spausdinam.cpp
+SRC = main.cpp skaitymas.cpp meniu.cpp Generavimas.cpp spausdinam.cpp laikai.cpp
 
 all:
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)

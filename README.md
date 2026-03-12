@@ -79,6 +79,8 @@ Buvo matuojami šie etapai:
 | 1 000 000 | ~1.32472 | ~0.05419 | ~1.01897 | ~9.26 |
 | 10 000 000 | ~10.91815 | ~0.56308 | ~9.93380 | ~34.52 |
 
+![Spartos laikai 1](screenshots/v0.4_rezultatai2.png)
+
 ---
 
 # Išvados

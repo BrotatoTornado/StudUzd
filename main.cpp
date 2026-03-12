@@ -2,6 +2,7 @@
 #include "studentas.h"
 #include "meniu.h"
 #include "spausdinam.h"  // naujas header su spausdinimo ir rusiavimo funkcijomis
+#include "laikai.h"
 
 #include <algorithm>
 #include <chrono>
@@ -67,6 +68,14 @@ void pradetiSpausdint(std::vector<Stud>& studis)
     }
 }
 
+void laikoRez(double progTrukme)
+{
+    std::cout << "Failo skaitymas: " << timers.skaitymas << std::endl;
+    std::cout << "Studentų suskirstymas: " << timers.rusiavimas << std::endl;
+    std::cout << "Failų išvedimas: " << timers.isvedimas << std::endl;
+    std::cout << "Visos programos trukmė: " << progTrukme << std::endl;
+}
+
 int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
@@ -81,7 +90,7 @@ int main()
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double> duration = end - start;
 
-                std::cout << "Visos programos trukme: " << duration.count() << " sekundziu" << std::endl;
+                laikoRez(duration.count());
                 return 0;
             }
 
@@ -142,6 +151,6 @@ int main()
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
 
-    std::cout << "Visos programos trukme: " << duration.count() << " sekundziu" << std::endl;
+    laikoRez(duration.count());
     return 0;
 }

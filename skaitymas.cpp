@@ -1,5 +1,6 @@
 #include "skaitymas.h"
 #include "Generavimas.h"
+#include "laikai.h"
 
 #include <algorithm>
 #include <chrono>
@@ -117,7 +118,7 @@ void failoSkaitymas(std::vector<Stud>& studis)
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
 
-        std::cout << "Duomenu nuskaitymo trukme: " << duration.count() << " sekundziu" << std::endl;
+        timers.skaitymas = duration.count();
 
         suskaiciuotiGalutinius(studis);
         skirstymasGrupes(studis);

@@ -113,5 +113,10 @@ spausdinam.h
 - `<fstream>`
 - `<iomanip>`
 - `<chrono>`
+
+---
+
+Programa sukompiliuojama su makefile, įrašant "make" į konsolę.
+Kompiliavimui naudojamos komandos: g++ -std=c++17 -Wall -Wextra -O3
 - `<random>`
 - `<sstream>`

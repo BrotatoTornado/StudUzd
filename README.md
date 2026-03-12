@@ -67,7 +67,7 @@ Buvo matuojami šie etapai:
 3. rezultatų išvedimas į failus
 4. bendras programos veikimo laikas
 
-![Spartos laikai](screenshots/v0.4 rezultatai1.png)
+![Spartos laikai 1](screenshots/V0.4 rezultatai1.png)
 
 ## Rezultatai (vidurkiai)
 

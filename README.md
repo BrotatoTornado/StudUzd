@@ -1,122 +1,72 @@
-# Studentų duomenų apdorojimo programa
+# Studentu duomenu apdorojimo programa
 
-## v0.4
+## v1.0
 
-Ši versija skirta studentų duomenų automatiniam sukūrimui ir apdorojimui. Leidžia(nauja):
+Ši v1.0 versija parengta is v0.4 bazes ir papildyta taip, kad studentų konteinerio tipas gali būti keičiamas nekeičiant programos logikos tarp:
 
-- generuoti studentų duomenų failus
-- suskirstyti studentus į dvi grupes:
-  - **vargšai** (galutinis balas < 5)
-  - **protobokštai** (galutinis balas ≥ 5)
-- išvesti rezultatus į failus automatiškai
+- `std::vector<Stud>`
+- `std::list<Stud>`
+- `std::deque<Stud>`
 
-Programai atlikta **veikimo spartos analizė**.
+Papildomai realizuotos **2 studentų skirstymo strategijos**:
 
----
+1. **Strategija 1** - bendras konteineris suskaidomas į du naujus to paties tipo konteinerius:
+   - `vargšiukai`
+   - `protai`
 
-# Testavimo aplinka
+2. **Strategija 2** - kuriamas tik vienas naujas konteineris:
+   - `vargšiukai`
 
-| Parametras | Reikšmė |
-|---|---|
-| Kalba | C++ |
-| Kompiliatorius | g++ (MinGW) |
-| OS | Windows |
-| Laiko matavimas | `std::chrono` |
+   O iš bendro konteinerio studentai trinami, todel jame po skirstymo lieka tik `protai`.
 
 ---
 
-# Testuojami duomenys
+## Kaip keisti konteineri
 
-Buvo generuojami failai su skirtingu studentų kiekiu:
-
-| Studentų skaičius |
-|---|
-| 1 000 |
-| 10 000 |
-| 100 000 |
-| 1 000 000 |
+Visos skirtingos programos su skirtingais konteineriais sukuriamos automatiškai. Kad paleisti, įveskite ".\programa_(konteinerio tipas)".
 
 ---
 
-# 1 tyrimas – failų generavimas
+## Programos galimybes
 
-## Tikslas
-Išmatuoti, kiek laiko užtrunka studentų duomenų failo sukūrimas.
+Programa leidžia:
 
-## Rezultatai
-
-| Studentų skaičius | Generavimo laikas (s) |
-|---|---|
-| 1 000 | ~0.00255 |
-| 10 000 | ~0.022184 |
-| 100 000 | ~0.192418 |
-| 1 000 000 | ~2.37987 |
-| 10 000 000 | ~22.4681 |
+- įvesti studentą ranka
+- nuskaityti studentus iš failo
+- generuoti pavienius studentus su atsitiktiniais pažymiais
+- sugeneruoti visą studentų failą
+- surikiuoti studentus
+- suskirstyti studentus į `vargšiukus` ir `protus`
+- atlikti konteinerių ir strategijų veikimo spartos tyrimą
 
 ---
 
-# 2 tyrimas – duomenų apdorojimas
+## Rūšiavimas
 
-## Tikslas
-Išmatuoti, kiek laiko užtrunka jau sugeneruotų studentų duomenų apdorojimas.
+Visiems konteineriams išlaikyta ta pati logika. Pakeistas tik pats konteinerio tipas.
 
-Buvo matuojami šie etapai:
-
-1. duomenų nuskaitymas iš failo
-2. studentų skirstymas į dvi grupes
-3. rezultatų išvedimas į failus
-4. bendras programos veikimo laikas
-
-![Spartos laikai 1](screenshots/v0.4_rezultatai1.png)
-
-## Rezultatai (vidurkiai)
-
-| Studentų skaičius | Skaitymas (s) | Skirstymas (s) | Rašymas (s) | Bendras laikas (s) |
-|---|---|---|---|---|
-| 1 000 | ~0.00250 | ~0.00012 | ~0.00295 | ~8.21 |
-| 10 000 | ~0.01557 | ~0.00047 | ~0.01522 | ~7.84 |
-| 100 000 | ~0.07108 | ~0.00442 | ~0.10345 | ~8.14 |
-| 1 000 000 | ~1.32472 | ~0.05419 | ~1.01897 | ~9.26 |
-| 10 000 000 | ~10.91815 | ~0.56308 | ~9.93380 | ~34.52 |
-
-![Spartos laikai 1](screenshots/v0.4_rezultatai2.png)
+- `std::vector` ir `std::deque` atveju naudojamas `std::sort`
+- `std::list` atveju naudojamas `list::sort`
 
 ---
 
-# Išvados
+## Projekto struktūra
 
-- Programa efektyviai tvarko studentų duomenis tiek mažiems, tiek dideliems kiekiams.
-- Duomenų skaitymas ir failų išvedimas užima daugiausiai laiko, ypač esant milijonams įrašų, o studentų suskirstymas į grupes ir vidurkių/medianos skaičiavimas praktiškai neturi įtakos bendram vykdymo laikui.
-- Optimizacijoms reikėtų dėmesio skirti failų įvesties/išvesties operacijoms arba naudoti binarinius failus ar didesnio našumo duomenų saugojimo būdus.
-
----
-
-# Projekto struktūra
-- main.cpp
-- meniu.cpp
-- skaitymas.cpp
-- Generavimas.cpp
-- spausdinam.cpp
-/------------HEADERS------------\
-studentas.h
-meniu.h
-skaitymas.h
-Generavimas.h
-spausdinam.h
----
-
-# Naudotos bibliotekos
-
-- `<iostream>`
-- `<vector>`
-- `<algorithm>`
-- `<fstream>`
-- `<iomanip>`
-- `<chrono>`
+- `main.cpp`
+- `meniu.cpp`
+- `skaitymas.cpp`
+- `Generavimas.cpp`
+- `spausdinam.cpp`
+- `tyrimas.cpp`
+- `laikai.cpp`
+- `studentas.h`
+- `konteineris.h`
+- `meniu.h`
+- `skaitymas.h`
+- `Generavimas.h`
+- `spausdinam.h`
+- `tyrimas.h`
+- `laikai.h`
+- `Makefile`
 
 ---
-
-Programa sukompiliuojama su makefile, įrašant "make" į konsolę.
-Kompiliavimui naudojamos komandos: g++ -std=c++17 -Wall -Wextra -O3
-- `<random>`
-- `<sstream>`

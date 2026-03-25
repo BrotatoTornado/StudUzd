@@ -15,4 +15,6 @@ programa_deque:
 	$(CXX) $(CXXFLAGS) -DUSE_DEQUE $(SRC) -o programa_deque
 
 clean:
-	rm -f programa_vector programa_list programa_deque
+	rm -f programa_vector programa_list programa_deque *.exe benchmark_*.md
+
+.PHONY: all clean

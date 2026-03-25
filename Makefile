@@ -1,16 +1,18 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O3
 
-TARGET = programa
-SRC = main.cpp skaitymas.cpp meniu.cpp Generavimas.cpp spausdinam.cpp laikai.cpp
+SRC = main.cpp skaitymas.cpp meniu.cpp Generavimas.cpp spausdinam.cpp laikai.cpp tyrimas.cpp
 
-all:
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
+all: programa_vector programa_list programa_deque
 
-run: all
-	./$(TARGET)
+programa_vector:
+	$(CXX) $(CXXFLAGS) $(SRC) -o programa_vector
+
+programa_list:
+	$(CXX) $(CXXFLAGS) -DUSE_LIST $(SRC) -o programa_list
+
+programa_deque:
+	$(CXX) $(CXXFLAGS) -DUSE_DEQUE $(SRC) -o programa_deque
 
 clean:
-	rm -f $(TARGET) *.exe
-
-.PHONY: all run clean
+	rm -f programa_vector programa_list programa_deque

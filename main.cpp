@@ -38,57 +38,68 @@ int gautiApdorojimoPasirinkima()
 }
 
 
-void pradetiSpausdint(std::vector<Stud>& studis)
+void pradetiSpausdint(const StudContainer& studis)
 {
     int faila;
-    std::cout << "Į konsolę ar failą?\n1 - Konsolę\n2 - Failą" << std::endl;
+    std::cout << "I konsole ar i faila?\n1 - Konsole\n2 - Faila" << std::endl;
+
     while (true)
     {
         std::cin >> faila;
+
         if (!std::cin)
         {
-            std::cerr << "Neteisinga įvestis. Bandykite iš naujo." << std::endl;
+            std::cerr << "Neteisinga ivestis. Bandykite is naujo." << std::endl;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
+
         break;
     }
 
     if (faila == 1)
     {
         std::cout << std::left << std::setw(20) << "Vardas"
-            << std::setw(20) << "Pavarde"
-            << std::setw(20) << "Galutinis(Vid.)"
-            << std::setw(15) << "Galutinis(Med.)" << '\n';
+                  << std::setw(20) << "Pavarde"
+                  << std::setw(20) << "Galutinis(Vid.)"
+                  << std::setw(15) << "Galutinis(Med.)" << '\n';
         std::cout << "-------------------------------------------------------\n";
-        for (auto& i : studis)
+
+        for (const auto& i : studis)
         {
             std::cout << std::left << std::setw(20) << i.vard
-                << std::setw(20) << i.pav
-                << std::setw(20) << std::fixed << std::setprecision(2) << i.galrezVid
-                << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezMed
-                << '\n';
+                      << std::setw(20) << i.pav
+                      << std::setw(20) << std::fixed << std::setprecision(2) << i.galrezVid
+                      << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezMed
+                      << '\n';
         }
     }
-    else
+    else if (faila == 2)
     {
         std::string pav;
-        std::cout << "Įveskite pavadinimą:" << std::endl;
+        std::cout << "Iveskite pavadinima:" << std::endl;
+
         while (true)
         {
             std::cin >> pav;
+
             if (!std::cin)
             {
-                std::cerr << "Neteisinga įvestis. Bandykite iš naujo." << std::endl;
+                std::cerr << "Neteisinga ivestis. Bandykite is naujo." << std::endl;
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 continue;
             }
+
             break;
         }
 
         spausdinam(studis, pav);
+    }
+    else
+    {
+        std::cout << "Neteisingas pasirinkimas." << std::endl;
     }
 }
 

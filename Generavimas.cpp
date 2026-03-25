@@ -1,18 +1,16 @@
 #include "Generavimas.h"
-#include "spausdinam.h"
-#include "skaitymas.h"
-#include "laikai.h"
 
-#include <vector>
+#include "laikai.h"
+#include "spausdinam.h"
+
+#include <chrono>
 #include <fstream>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <random>
 #include <string>
-#include <algorithm>
-#include <chrono>
 
-bool galimasPavadinimas(std::string pav)
+bool galimasPavadinimas(const std::string& pav)
 {
     std::ifstream f(pav);
     return f.is_open();
@@ -26,58 +24,118 @@ std::string failoPavadinimas(const std::string& bazinisPavadinimas)
     while (galimasPavadinimas(pavadinimas))
     {
         count++;
-        pavadinimas = bazinisPavadinimas + std::to_string(count) + ".txt";
+        pavadinimas = bazinisPavadinimas + "_" + std::to_string(count) + ".txt";
     }
 
     return pavadinimas;
 }
 
-void skirstymasGrupes(std::vector<Stud>& studis)
+SkirstymoStrategija pasirinktiStrategija()
 {
-    auto start = std::chrono::high_resolution_clock::now();
+    std::cout << "\nPasirinkite studentu skirstymo strategija:\n";
+    std::cout << "1 - Sukurti du naujus konteinerius (vargsiukai ir kietiakai)\n";
+    std::cout << "2 - Kurti tik vargsiuku konteineri, o kietiakus palikti bendrame konteineryje\n";
 
-    // dabar daliname į vargsus ir protus ir išvedame į failus
-    std::vector<Stud> vargsai;
-    std::vector<Stud> protai;
-    vargsai.reserve(studis.size());
-    protai.reserve(studis.size());
+    int pasirinkimas;
+    std::cin >> pasirinkimas;
 
-    for (auto& s : studis)
+    if (!std::cin || pasirinkimas < 1 || pasirinkimas > 2)
+    {
+        throw std::runtime_error("Neteisingas strategijos pasirinkimas.");
+    }
+
+    return static_cast<SkirstymoStrategija>(pasirinkimas);
+}
+
+SkirstymoRezultatas skirstymasStrategija1(const StudContainer& studis)
+{
+    SkirstymoRezultatas rezultatas;
+
+    for (const auto& s : studis)
     {
         if (s.galrezVid < 5.0f)
         {
-            vargsai.push_back(s);
+            rezultatas.vargsiukai.push_back(s);
         }
         else
         {
-            protai.push_back(s);
+            rezultatas.kietiakai.push_back(s);
         }
+    }
+
+    return rezultatas;
+}
+
+SkirstymoRezultatas skirstymasStrategija2(StudContainer& studis)
+{
+    SkirstymoRezultatas rezultatas;
+
+    for (auto i = studis.begin(); i != studis.end();)
+    {
+        if (i->galrezVid < 5.0f)
+        {
+            rezultatas.vargsiukai.push_back(*i);
+            i = studis.erase(i);
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    rezultatas.kietiakai = std::move(studis);
+    return rezultatas;
+}
+
+SkirstymoRezultatas skirstymasGrupes(StudContainer& studis, SkirstymoStrategija strategija, bool irasytiIFailus, bool paprasytiRikiavimo)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+
+    SkirstymoRezultatas rezultatas;
+    if (strategija == SkirstymoStrategija::Pirma)
+    {
+        rezultatas = skirstymasStrategija1(studis);
+    }
+    else
+    {
+        rezultatas = skirstymasStrategija2(studis);
     }
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
+    timers.skirstymas = duration.count();
 
-    timers.rusiavimas = duration.count();
+    if (!irasytiIFailus)
+    {
+        timers.isvedimas = 0.0;
+        return rezultatas;
+    }
 
-    //std::cout << "Suskirstymo i grupes trukme: " << duration.count() << " sekundziu" << std::endl;
-    
-    rikiuotiStudentus(vargsai, "vargsus");
-    rikiuotiStudentus(protai, "protobokstus");
+    if (paprasytiRikiavimo)
+    {
+        rikiuotiStudentus(rezultatas.vargsiukai, "vargsiukus");
+        rikiuotiStudentus(rezultatas.kietiakai, "kietiakus");
+    }
 
     auto startPrint = std::chrono::high_resolution_clock::now();
-    spausdinam(vargsai, failoPavadinimas("Vargsai"));
-    spausdinam(protai, failoPavadinimas("Protobokstai"));
+
+    const std::string sufiksas = "_" + aktyvausKonteinerioTrumpasPavadinimas() + "_S" + std::to_string(static_cast<int>(strategija));
+
+    spausdinam(rezultatas.vargsiukai, failoPavadinimas("Vargsiukai" + sufiksas));
+    spausdinam(rezultatas.kietiakai, failoPavadinimas("Kietiakai" + sufiksas));
+
     auto endPrint = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> durationPrint = endPrint - startPrint;
-
     timers.isvedimas = durationPrint.count();
 
-    //std::cout << "Isvedimo i failus trukme: " << durationPrint.count() << " sekundziu" << std::endl;
+    std::cout << "Studentai suskirstyti. Vargsiuku: " << rezultatas.vargsiukai.size() << ", kietiaku: " << rezultatas.kietiakai.size() << std::endl;
+
+    return rezultatas;
 }
 
 void generuotiFaila()
 {
-    std::cout << "Įrašykite failo pavadinimą: ";
+    std::cout << "Iveskite failo pavadinima: ";
     std::string pav;
     std::cin >> pav;
 
@@ -91,21 +149,22 @@ void generuotiFaila()
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<int> dist(1, 10);
 
-    std::cout << "Įveskite studentų kiekį: ";
+    std::cout << "Iveskite studentu kieki: ";
     int kiekis;
     std::cin >> kiekis;
 
     auto start = std::chrono::high_resolution_clock::now();
-    int ndkiek = dist(gen); // kiek ND generuoti
 
-    // spausdiname antraštę
-    write << std::left << std::setw(15) << "Vardas"
-        << std::setw(15) << "Pavarde";
+    const int ndkiek = dist(gen);
+
+    write << std::left << std::setw(15) << "Vardas" << std::setw(15) << "Pavarde";
+
     for (int j = 0; j < ndkiek; j++)
     {
         write << std::setw(8) << ("ND" + std::to_string(j + 1));
     }
-    write << std::setw(8) << "Egz." << std::endl;
+
+    write << std::setw(8) << "Egz." << '\n';
 
     for (int i = 0; i < kiekis; i++)
     {
@@ -114,14 +173,14 @@ void generuotiFaila()
         s.pav = "Pavarde" + std::to_string(i + 1);
 
         write << std::left << std::setw(15) << s.vard
-            << std::setw(15) << s.pav;
+              << std::setw(15) << s.pav;
 
         s.rez.clear();
         s.vid = 0.0f;
 
         for (int j = 0; j < ndkiek; j++)
         {
-            int nd = dist(gen);
+            const int nd = dist(gen);
             s.rez.push_back(nd);
             s.vid += nd;
             write << std::setw(8) << nd;
@@ -129,17 +188,16 @@ void generuotiFaila()
 
         if (!s.rez.empty())
         {
-            s.vid /= s.rez.size();
+            s.vid /= static_cast<float>(s.rez.size());
         }
 
         s.egrez = dist(gen);
-        write << std::setw(8) << s.egrez << std::endl;
+        write << std::setw(8) << s.egrez << '\n';
     }
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-
     timers.generavimas = duration.count();
 
-    //std::cout << "Failo generavimo trukme: " << duration.count() << " sekundes" << std::endl;
+    std::cout << "Failas sugeneruotas per " << timers.generavimas << " s." << std::endl;
 }

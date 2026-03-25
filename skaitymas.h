@@ -2,15 +2,14 @@
 #ifndef SKAITOM
 #define SKAITOM
 
-#include "studentas.h"
-#include <vector>
+#include "konteineris.h"
 #include <string>
 
-
 void dinamuojamPazymius(Stud& studis);
-void failoSkaitymas(std::vector<Stud>& studis);
+bool failoSkaitymas(StudContainer& studis);
+bool failoSkaitymas(StudContainer& studis, const std::string& pav);
 void parinktiAtsitiktinius(Stud& studis);
 void skaitomRanka(Stud& studis);
-void suskaiciuotiGalutinius(std::vector<Stud>& studis);
+void suskaiciuotiGalutinius(StudContainer& studis);
 
 #endif

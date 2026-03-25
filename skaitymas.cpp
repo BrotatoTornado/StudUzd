@@ -1,25 +1,21 @@
 #include "skaitymas.h"
-#include "Generavimas.h"
 #include "laikai.h"
 
 #include <algorithm>
 #include <chrono>
 #include <fstream>
-#include <iomanip>
 #include <iostream>
 #include <random>
 #include <sstream>
-#include <string>
-#include <vector>
-#include <cstdlib>
 #include <stdexcept>
+#include <string>
 
 void dinamuojamPazymius(Stud& studis)
 {
     std::cout << "Iveskite namu darbu pazymius. Irasykite 0 kai baigete." << std::endl;
 
     studis.rez.clear();
-    studis.vid = 0;
+    studis.vid = 0.0f;
 
     while (true)
     {
@@ -35,7 +31,8 @@ void dinamuojamPazymius(Stud& studis)
         {
             break;
         }
-        else if (x > 10)
+
+        if (x > 10)
         {
             std::cout << "Netinkamas skaicius. Iveskite tarp 1 ir 10" << std::endl;
             continue;
@@ -47,7 +44,7 @@ void dinamuojamPazymius(Stud& studis)
 
     if (!studis.rez.empty())
     {
-        studis.vid /= studis.rez.size();
+        studis.vid /= static_cast<float>(studis.rez.size());
     }
     else
     {
@@ -55,12 +52,16 @@ void dinamuojamPazymius(Stud& studis)
     }
 }
 
-void failoSkaitymas(std::vector<Stud>& studis)
+bool failoSkaitymas(StudContainer& studis)
 {
-    std::cout << "Įveskite failo pavadinimą:" << std::endl;
+    std::cout << "Iveskite failo pavadinima:" << std::endl;
     std::string pav;
     std::cin >> pav;
+    return failoSkaitymas(studis, pav);
+}
 
+bool failoSkaitymas(StudContainer& studis, const std::string& pav)
+{
     auto start = std::chrono::high_resolution_clock::now();
 
     try
@@ -69,13 +70,13 @@ void failoSkaitymas(std::vector<Stud>& studis)
 
         if (!read.is_open())
         {
-            throw std::runtime_error("Neatidarem failo. Patikrinkite pavadinimą.");
+            throw std::runtime_error("Neatidarem failo. Patikrinkite pavadinima.");
         }
 
         std::string line;
-        getline(read, line); //kad neunuskaityti pradines antrasciu eilutes
+        std::getline(read, line);
 
-        while (getline(read, line))
+        while (std::getline(read, line))
         {
             if (line.empty())
             {
@@ -101,9 +102,9 @@ void failoSkaitymas(std::vector<Stud>& studis)
             s.egrez = s.rez.back();
             s.rez.pop_back();
 
-            for (auto i : s.rez)
+            for (const auto& pazymys : s.rez)
             {
-                s.vid += i;
+                s.vid += pazymys;
             }
 
             if (!s.rez.empty())
@@ -114,35 +115,32 @@ void failoSkaitymas(std::vector<Stud>& studis)
             studis.push_back(s);
         }
 
-
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end - start;
-
         timers.skaitymas = duration.count();
 
-        suskaiciuotiGalutinius(studis);
-        skirstymasGrupes(studis);
+        return true;
     }
-
-    catch (const std::runtime_error& e)
+    catch (const std::exception& e)
     {
         std::cerr << "Klaida skaitant faila: " << e.what() << std::endl;
+        return false;
     }
 }
 
-void suskaiciuotiGalutinius(std::vector<Stud>& studis)
+void suskaiciuotiGalutinius(StudContainer& studis)
 {
     for (auto& i : studis)
     {
         std::sort(i.rez.begin(), i.rez.end());
 
         float med = 0.0f;
-        int n = static_cast<int>(i.rez.size());
+        const int n = static_cast<int>(i.rez.size());
 
         if (n == 0)
         {
-            i.galrezMed = 0;
-            i.galrezVid = 0;
+            i.galrezMed = 0.0f;
+            i.galrezVid = 0.0f;
             continue;
         }
 
@@ -164,18 +162,20 @@ void parinktiAtsitiktinius(Stud& studis)
 {
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> dist(1, 10);
-    int kiekND = dist(gen);
+
+    const int kiekND = dist(gen);
+
     studis.rez.clear();
     studis.vid = 0.0f;
 
     for (int i = 0; i < kiekND; i++)
     {
-        int balas = dist(gen);
+        const int balas = dist(gen);
         studis.rez.push_back(balas);
         studis.vid += balas;
     }
 
-    studis.vid /= studis.rez.size();
+    studis.vid /= static_cast<float>(studis.rez.size());
     studis.egrez = dist(gen);
 }
 
@@ -183,6 +183,7 @@ void skaitomRanka(Stud& studis)
 {
     std::cout << "Iveskite varda" << std::endl;
     std::cin >> studis.vard;
+
     std::cout << "Iveskite pavarde" << std::endl;
     std::cin >> studis.pav;
 

@@ -1,15 +1,17 @@
 #include "meniu.h"
-#include "skaitymas.h"
+
 #include "Generavimas.h"
+#include "skaitymas.h"
+#include "tyrimas.h"
 
 #include <iostream>
 #include <stdexcept>
-#include <vector>
-#include <algorithm>
+				 
+					
 
-bool vykdytiMeniu(std::vector<Stud>& studis)
+bool vykdytiMeniu(StudContainer& studis)
 {
-    Stud s;
+		   
 
     while (true)
     {
@@ -34,14 +36,21 @@ bool vykdytiMeniu(std::vector<Stud>& studis)
         switch (pasirinkimas)
         {
             case 1:
+            {
+                Stud s;
                 skaitomRanka(s);
                 studis.push_back(s);
                 break;
+            }
             case 2:
-                failoSkaitymas(studis);
-                //studis.push_back(s);
+                if (failoSkaitymas(studis))
+                {
+                    return true;
+                }
                 break;
             case 3:
+            {
+                Stud s;
                 std::cout << "Iveskite varda: ";
                 std::cin >> s.vard;
                 std::cout << "Iveskite pavarde: ";
@@ -52,8 +61,11 @@ bool vykdytiMeniu(std::vector<Stud>& studis)
                 studis.push_back(s);
 
                 break;
+            }
             case 4:
+            {
                 static int nr = 1;
+                Stud s;
                 s.vard = "Vardas" + std::to_string(nr);
                 s.pav = "Pavarde" + std::to_string(nr);
                 nr++;
@@ -63,25 +75,28 @@ bool vykdytiMeniu(std::vector<Stud>& studis)
                 studis.push_back(s);
 
                 break;
+            }
             case 5:
                 generuotiFaila();
-                char gr;
-                std::cout << "Grįžti į pradžią? (y/n): ";
-                std::cin >> gr;
-                if (gr == 'y' || gr == 'Y')
-                {
-                    continue;
-                }
-                else
-                {
-                    return false;
-                }
+                break;
             case 6:
+                vykdytiTyrima();
+                break;
+            case 7:
+                if (studis.empty())
+				 
+					
+                {
+                    std::cout << "Nera sukauptu studentu.\n";
+                    break;
+                }
+                return true;
+            case 8:
                 return false;
             default:
                 std::cout << "Neteisingas pasirinkimas.\n";
-                continue;
+                break;
         }
     }
-    return true;
+				
 }

@@ -1,17 +1,15 @@
-#include "skaitymas.h"
-#include "studentas.h"
-#include "meniu.h"
-#include "spausdinam.h"  // naujas header su spausdinimo ir rusiavimo funkcijomis
+#include "Generavimas.h"
+#include "konteineris.h"
 #include "laikai.h"
+#include "meniu.h"
+#include "skaitymas.h"
+#include "spausdinam.h"
 
-#include <algorithm>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
-#include <vector>
-#include <stdexcept>
-#include <fstream>
 #include <limits>
+
 
 int gautiApdorojimoPasirinkima()
 {
@@ -37,7 +35,6 @@ int gautiApdorojimoPasirinkima()
     }
 }
 
-
 void pradetiSpausdint(const StudContainer& studis)
 {
     int faila;
@@ -60,19 +57,12 @@ void pradetiSpausdint(const StudContainer& studis)
 
     if (faila == 1)
     {
-        std::cout << std::left << std::setw(20) << "Vardas"
-                  << std::setw(20) << "Pavarde"
-                  << std::setw(20) << "Galutinis(Vid.)"
-                  << std::setw(15) << "Galutinis(Med.)" << '\n';
+        std::cout << std::left << std::setw(20) << "Vardas" << std::setw(20) << "Pavarde" << std::setw(20) << "Galutinis(Vid.)" << std::setw(15) << "Galutinis(Med.)" << '\n';
         std::cout << "-------------------------------------------------------\n";
 
         for (const auto& i : studis)
         {
-            std::cout << std::left << std::setw(20) << i.vard
-                      << std::setw(20) << i.pav
-                      << std::setw(20) << std::fixed << std::setprecision(2) << i.galrezVid
-                      << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezMed
-                      << '\n';
+            std::cout << std::left << std::setw(20) << i.vard << std::setw(20) << i.pav << std::setw(20) << std::fixed << std::setprecision(2) << i.galrezVid << std::setw(15) << std::fixed << std::setprecision(2) << i.galrezMed << '\n';
         }
     }
     else if (faila == 2)
@@ -105,26 +95,31 @@ void pradetiSpausdint(const StudContainer& studis)
 
 void laikoRez(double progTrukme)
 {
-    std::cout << "Failo skaitymas: " << timers.skaitymas << std::endl;
-    std::cout << "Studentų suskirstymas: " << timers.rusiavimas << std::endl;
-    std::cout << "Failų išvedimas: " << timers.isvedimas << std::endl;
-    std::cout << "Visos programos trukmė: " << progTrukme << std::endl;
+    std::cout << "Failo skaitymas: " << timers.skaitymas << '\n';
+    std::cout << "Studentu rikiavimas: " << timers.rusiavimas << '\n';
+    std::cout << "Studentu skirstymas: " << timers.skirstymas << '\n';
+    std::cout << "Failu isvedimas: " << timers.isvedimas << '\n';
+    std::cout << "Visos programos trukme: " << progTrukme << '\n';
 }
 
 int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
+
     try
     {
         while (true)
         {
-            std::vector<Stud> studis;
+            nunulintiLaikus();
+
+            std::cout << "\nAktyvus studentu konteineris: " << aktyvausKonteinerioPavadinimas() << '\n';
+
+            StudContainer studis;
 
             if (!vykdytiMeniu(studis))
             {
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double> duration = end - start;
-
                 laikoRez(duration.count());
                 return 0;
             }
@@ -132,49 +127,41 @@ int main()
             if (studis.empty())
             {
                 std::cout << "Nera ivestu studentu.\n";
-                char grz;
-                std::cout << "Grįžti į pradžią? (y/n): ";
-                std::cin >> grz;
-                if (!std::cin)
-                {
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                }
-                if (grz == 'y' || grz == 'Y')
-                {
-                    continue;
-                }
-                else
-                {
-                    break;
-                }
+                continue;
             }
 
-            if (studis.size() > 0)
-            {
-                suskaiciuotiGalutinius(studis);
+            suskaiciuotiGalutinius(studis);
 
+            const int apdorojimas = gautiApdorojimoPasirinkima();
+
+            if (apdorojimas == 1 || apdorojimas == 3)
+            {
                 rikiuotiStudentus(studis, "studentus");
                 pradetiSpausdint(studis);
             }
 
+            if (apdorojimas == 2 || apdorojimas == 3)
+            {
+                const SkirstymoStrategija strategija = pasirinktiStrategija();
+                skirstymasGrupes(studis, strategija, true, true);
+            }
+
             char gr;
-            // po spausdinimo paklausti, ar grįžti į pradžią
-            std::cout << "Grįžti į pradžią? (y/n): ";
+            std::cout << "Grizti i pradzia? (y/n): ";
             std::cin >> gr;
+
             if (!std::cin)
             {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
+
             if (gr == 'y' || gr == 'Y')
             {
                 continue;
             }
-            else
-            {
-                break;
-            }
+
+            break;
         }
     }
     catch (const std::exception& e)
@@ -185,7 +172,6 @@ int main()
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-
     laikoRez(duration.count());
     return 0;
 }

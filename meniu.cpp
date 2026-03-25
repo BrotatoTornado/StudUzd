@@ -15,11 +15,13 @@ bool vykdytiMeniu(std::vector<Stud>& studis)
     {
         std::cout << "\nPasirinkite programos eiga:\n";
         std::cout << "1 - Ivesti studenta ranka\n";
-        std::cout << "2 - Skaityti is failo\n";
-        std::cout << "3 - Generuoti tik pazymius\n";
-        std::cout << "4 - Generuoti vardus, pavardes ir pazymius\n";
+        std::cout << "2 - Skaityti is failo ir iskart apdoroti\n";
+        std::cout << "3 - Prideti studenta su atsitiktiniais pazymiais\n";
+        std::cout << "4 - Prideti sugeneruota studenta (vardas/pavarde/pazymiai)\n";
         std::cout << "5 - Sugeneruoti studentu faila\n";
-        std::cout << "6 - Baigti darba\n";
+        std::cout << "6 - Atlikti konteineriu ir strategiju tyrima\n";
+        std::cout << "7 - Apdoroti sukauptus studentus\n";
+        std::cout << "8 - Baigti darba\n";
 
         int pasirinkimas;
         std::cin >> pasirinkimas;

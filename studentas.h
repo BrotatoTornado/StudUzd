@@ -8,7 +8,7 @@
 struct Stud
 {
     std::string vard, pav;
-    int egrez;
+    int egrez = 0;
     std::vector<int> rez;
     float vid = 0.0f, galrezMed = 0.0f, galrezVid = 0.0f;
 };

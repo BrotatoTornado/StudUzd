@@ -2,9 +2,8 @@
 #ifndef MENIU
 #define MENIU
 
-#include "studentas.h"
-#include <vector>
+#include "konteineris.h"
 
-bool vykdytiMeniu(std::vector<Stud>& studis);
+bool vykdytiMeniu(StudContainer& studis);
 
 #endif

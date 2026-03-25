@@ -1,5 +1,4 @@
 #include "tyrimas.h"
-
 #include "Generavimas.h"
 #include "konteineris.h"
 #include "laikai.h"

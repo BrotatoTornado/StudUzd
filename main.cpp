@@ -13,6 +13,30 @@
 #include <fstream>
 #include <limits>
 
+int gautiApdorojimoPasirinkima()
+{
+    std::cout << "\nKą daryti su gautais studentais?\n";
+    std::cout << "1 - Spausdinti visus studentus\n";
+    std::cout << "2 - Suskirstyti i vargsiukus ir kietiakus\n";
+    std::cout << "3 - Abu veiksmai\n";
+
+    while (true)
+    {
+        int pasirinkimas;
+        std::cin >> pasirinkimas;
+
+        if (!std::cin || pasirinkimas < 1 || pasirinkimas > 3)
+        {
+            std::cerr << "Neteisinga ivestis. Bandykite is naujo." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+
+        return pasirinkimas;
+    }
+}
+
 
 void pradetiSpausdint(std::vector<Stud>& studis)
 {

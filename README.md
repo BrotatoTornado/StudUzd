@@ -104,7 +104,7 @@ Testai atliekami su šiais failų dydžiais:
 - 1000000 įrašų
 - 10000000 įrašų
 
-Pačius failus galima rasti repozitorijoje.
+[Pačius failus galima atsisiųsti iš čia.](https://drive.google.com/drive/folders/1qzaUmH6uCoukvYfjZTGOEyJnYAvrIs-E?usp=sharing)
 
 ![Procesoriaus darbas](screenshots/darbas.png)
 

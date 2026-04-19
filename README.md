@@ -106,6 +106,8 @@ Testai atliekami su šiais failų dydžiais:
 
 Pačius failus galima rasti repozitorijoje.
 
+(screenshots/darbas.png)
+
 ---
 
 ## Testavimo rezultatai
@@ -203,6 +205,10 @@ Pačius failus galima rasti repozitorijoje.
 | studentai100000.txt | 100000 | 0.240527 | 0.011495 | 0.014369 | 0.266391 |
 | studentai1000000.txt | 1000000 | 1.232487 | 0.156806 | 0.158842 | 1.548135 |
 | studentai10000000.txt | 10000000 | 6.882318 | 1.811622 | 1.405848 | 10.099788 |
+
+(screenshots/v1.0 rez1.png)
+
+(screenshots/v1.0 rez2.png)
 
 ---
 

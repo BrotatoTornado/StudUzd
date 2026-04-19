@@ -65,7 +65,7 @@ TyrimoIrasas atliktiBandymuSerija(const std::string& failas, SkirstymoStrategija
 void spausdintiLentele(const std::vector<TyrimoIrasas>& rezultatai)
 {
     std::cout << '\n';
-    std::cout << std::left << std::setw(22) << "Failas" << std::setw(16) << "Irasu kiekis" << std::setw(16) << "Skaitymas (s)" << std::setw(18) << "Rusiavimas (s)" << std::setw(18) << "Skirstymas (s)" << '\n';
+    std::cout << std::left << std::setw(22) << "Failas" << std::setw(16) << "Irasu kiekis" << std::setw(16) << "Skaitymas (s)" << std::setw(18) << "Rusiavimas (s)" << std::setw(18) << "Skirstymas (s)" << "Is viso (s)" << '\n';
 
     std::cout << std::string(90, '-') << '\n';
 
@@ -75,7 +75,8 @@ void spausdintiLentele(const std::vector<TyrimoIrasas>& rezultatai)
     }
 }
 
-void issaugotiMarkdown(const std::vector<TyrimoIrasas>& rezultatai, SkirstymoStrategija strategija)
+//spausdinam i faila readme formatu, kad butu lengviau ikelti
+void iREADME(const std::vector<TyrimoIrasas>& rezultatai, SkirstymoStrategija strategija)
 {
     const std::string pav = "benchmark_" + aktyvausKonteinerioTrumpasPavadinimas()
         + "_S" + std::to_string(static_cast<int>(strategija)) + ".md";
@@ -91,9 +92,10 @@ void issaugotiMarkdown(const std::vector<TyrimoIrasas>& rezultatai, SkirstymoStr
     write << "| Failas | Irasu kiekis | Skaitymas (s) | Rusiavimas (s) | Skirstymas (s) |\n";
     write << "|---|---:|---:|---:|---:|\n";
 
-    for (const auto& rez : rezultatai)
+    for (auto& rez : rezultatai)
     {
-        write << "| " << rez.failas << " | " << rez.irasuKiekis << " | " << std::fixed << std::setprecision(6) << rez.skaitymas << " | " << std::fixed << std::setprecision(6) << rez.rusiavimas << " | " << std::fixed << std::setprecision(6) << rez.skirstymas << " |\n";
+        double isViso = rez.skaitymas + rez.rusiavimas + rez.skirstymas;
+        write << "| " << rez.failas << " | " << rez.irasuKiekis << " | " << std::fixed << std::setprecision(6) << rez.skaitymas << " | " << std::fixed << std::setprecision(6) << rez.rusiavimas << " | " << std::fixed << std::setprecision(6) << rez.skirstymas << " | " << std::fixed << std::setprecision(6) << isViso << " |\n";
     }
 
     std::cout << "Rezultatu lentele issaugota i faila: " << pav << std::endl;
@@ -176,5 +178,5 @@ void vykdytiTyrima()
     }
 
     spausdintiLentele(rezultatai);
-    issaugotiMarkdown(rezultatai, strategija);
+    iREADME(rezultatai, strategija);
 }

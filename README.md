@@ -309,10 +309,10 @@ Pačius failus galima rasti repozitorijoje.
 
 ## Sistemos parametrai
 
-CPU:  12th Gen Intel Core i5-12400F
-RAM:  32.0 GB (31.8 GB usable)
-Diskas:  HDD
-Operacinė sistema:  Windows 10
+- CPU:  12th Gen Intel Core i5-12400F
+- RAM:  32.0 GB (31.8 GB usable)
+- Diskas:  HDD
+- Operacinė sistema:  Windows 10
 
 ---
 

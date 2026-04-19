@@ -37,7 +37,7 @@ SkirstymoStrategija pasirinktiStrategija()
     std::cout << "\nPasirinkite studentu skirstymo strategija:\n";
     std::cout << "1 - Sukurti du naujus konteinerius (vargsiukai ir protai)\n";
     std::cout << "2 - Kurti tik vargsiuku konteineri, o kietiakus palikti bendrame konteineryje\n";
-    std::cout << "3 - Greiciausia strategija su efektyviais metodais.\n";
+    std::cout << "3 - Strategija su efektyviais metodais.\n";
 
     int pasirinkimas;
     std::cin >> pasirinkimas;

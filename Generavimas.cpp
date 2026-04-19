@@ -94,15 +94,16 @@ SkirstymoRezultatas skirstymasStrategija3(StudContainer& studis)
 {
     SkirstymoRezultatas rezultatas;
 
-    auto riba = std::stable_partition(studis.begin(), studis.end(),
+    auto riba = std::partition(studis.begin(), studis.end(),
         [](const Stud& s)
         {
             return s.galrezVid >= 5.0f;
         });
 
-    rezultatas.vargsiukai.insert(rezultatas.vargsiukai.end(), std::make_move_iterator(riba), std::make_move_iterator(studis.end()));
+    rezultatas.vargsiukai.assign(riba, studis.end());
+    rezultatas.protai.assign(studis.begin(), riba);
 
-    rezultatas.protai.insert(rezultatas.protai.end(), std::make_move_iterator(studis.begin()), std::make_move_iterator(riba));
+    studis.clear();
 
     return rezultatas;
 }

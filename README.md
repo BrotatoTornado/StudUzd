@@ -316,15 +316,6 @@ Pačius failus galima rasti repozitorijoje.
 
 ---
 
-## Testavimo aplinka
-
-Čia įterpti ekrano nuotraukas:
-- programos paleidimas
-- testavimo eiga
-- rezultatų lentelės
-
----
-
 ## Projekto struktūra
 
 main.cpp  

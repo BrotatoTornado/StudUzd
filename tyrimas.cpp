@@ -1,4 +1,5 @@
 #include "tyrimas.h"
+
 #include "Generavimas.h"
 #include "konteineris.h"
 #include "laikai.h"
@@ -28,7 +29,7 @@ bool failasEgzistuoja(const std::string& pav)
     return f.good();
 }
 
-TyrimoIrasas atliktiVienaBandymuSerija(const std::string& failas, SkirstymoStrategija strategija, int kartojimai)
+TyrimoIrasas atliktiBandymuSerija(const std::string& failas, SkirstymoStrategija strategija, int kartojimai)
 {
     TyrimoIrasas vidurkiai;
     vidurkiai.failas = failas;
@@ -161,7 +162,7 @@ void vykdytiTyrima()
             continue;
         }
 
-        auto rez = atliktiVienaBandymuSerija(failas, strategija, kartojimai);
+        auto rez = atliktiBandymuSerija(failas, strategija, kartojimai);
         if (rez.irasuKiekis != 0)
         {
             rezultatai.push_back(rez);

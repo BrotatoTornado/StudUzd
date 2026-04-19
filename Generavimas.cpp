@@ -9,6 +9,8 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <algorithm>
+#include <iterator>
 
 bool galimasPavadinimas(const std::string& pav)
 {
@@ -33,13 +35,14 @@ std::string failoPavadinimas(const std::string& bazinisPavadinimas)
 SkirstymoStrategija pasirinktiStrategija()
 {
     std::cout << "\nPasirinkite studentu skirstymo strategija:\n";
-    std::cout << "1 - Sukurti du naujus konteinerius (vargsiukai ir kietiakai)\n";
+    std::cout << "1 - Sukurti du naujus konteinerius (vargsiukai ir protai)\n";
     std::cout << "2 - Kurti tik vargsiuku konteineri, o kietiakus palikti bendrame konteineryje\n";
+    std::cout << "3 - Greiciausia strategija su efektyviais metodais.\n";
 
     int pasirinkimas;
     std::cin >> pasirinkimas;
 
-    if (!std::cin || pasirinkimas < 1 || pasirinkimas > 2)
+    if (!std::cin || pasirinkimas < 1 || pasirinkimas > 3)
     {
         throw std::runtime_error("Neteisingas strategijos pasirinkimas.");
     }
@@ -59,7 +62,7 @@ SkirstymoRezultatas skirstymasStrategija1(const StudContainer& studis)
         }
         else
         {
-            rezultatas.kietiakai.push_back(s);
+            rezultatas.protai.push_back(s);
         }
     }
 
@@ -83,7 +86,24 @@ SkirstymoRezultatas skirstymasStrategija2(StudContainer& studis)
         }
     }
 
-    rezultatas.kietiakai = std::move(studis);
+    rezultatas.protai = std::move(studis);
+    return rezultatas;
+}
+
+SkirstymoRezultatas skirstymasStrategija3(StudContainer& studis)
+{
+    SkirstymoRezultatas rezultatas;
+
+    auto riba = std::stable_partition(studis.begin(), studis.end(),
+        [](const Stud& s)
+        {
+            return s.galrezVid >= 5.0f;
+        });
+
+    rezultatas.vargsiukai.insert(rezultatas.vargsiukai.end(), std::make_move_iterator(riba), std::make_move_iterator(studis.end()));
+
+    rezultatas.protai.insert(rezultatas.protai.end(), std::make_move_iterator(studis.begin()), std::make_move_iterator(riba));
+
     return rezultatas;
 }
 
@@ -96,9 +116,13 @@ SkirstymoRezultatas skirstymasGrupes(StudContainer& studis, SkirstymoStrategija 
     {
         rezultatas = skirstymasStrategija1(studis);
     }
-    else
+    else if(strategija == SkirstymoStrategija::Antra)
     {
         rezultatas = skirstymasStrategija2(studis);
+    }
+    else
+    {
+        rezultatas = skirstymasStrategija3(studis);
     }
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -114,7 +138,7 @@ SkirstymoRezultatas skirstymasGrupes(StudContainer& studis, SkirstymoStrategija 
     if (paprasytiRikiavimo)
     {
         rikiuotiStudentus(rezultatas.vargsiukai, "vargsiukus");
-        rikiuotiStudentus(rezultatas.kietiakai, "kietiakus");
+        rikiuotiStudentus(rezultatas.protai, "kietiakus");
     }
 
     auto startPrint = std::chrono::high_resolution_clock::now();
@@ -122,13 +146,13 @@ SkirstymoRezultatas skirstymasGrupes(StudContainer& studis, SkirstymoStrategija 
     const std::string sufiksas = "_" + aktyvausKonteinerioTrumpasPavadinimas() + "_S" + std::to_string(static_cast<int>(strategija));
 
     spausdinam(rezultatas.vargsiukai, failoPavadinimas("Vargsiukai" + sufiksas));
-    spausdinam(rezultatas.kietiakai, failoPavadinimas("Kietiakai" + sufiksas));
+    spausdinam(rezultatas.protai, failoPavadinimas("protai" + sufiksas));
 
     auto endPrint = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> durationPrint = endPrint - startPrint;
     timers.isvedimas = durationPrint.count();
 
-    std::cout << "Studentai suskirstyti. Vargsiuku: " << rezultatas.vargsiukai.size() << ", kietiaku: " << rezultatas.kietiakai.size() << std::endl;
+    std::cout << "Studentai suskirstyti. Vargsiuku: " << rezultatas.vargsiukai.size() << ", kietiaku: " << rezultatas.protai.size() << std::endl;
 
     return rezultatas;
 }
